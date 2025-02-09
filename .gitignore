@@ -1,0 +1,18 @@
+# Оставляю только метаданные, сами данные не гружу на гитхаб 
+# data/raw_data/BACI_HS17_V202501/BACI_HS17_Y2017_V202501.csv
+data/raw_data/BACI_HS17_V202501/BACI_HS17_*
+data/raw_data/BACI_HS17_V202501/product_codes*
+data/raw_data/BACI_HS17_V202501/country_codes*
+
+data/raw_data/Our World In Data/owid-covid-data.csv*
+data/raw_data/Our World In Data/average-monthly-surface-temperature*
+data/raw_data/Our World In Data/readme*
+
+data/raw_data/OxCGRT/OxCGRT*
+
+data/raw_data/United Nations/un*
+data/raw_data/United Nations/WPP*
+
+data/raw_data/World Bank/pop*
+data/raw_data/WHO/SARS*
+
