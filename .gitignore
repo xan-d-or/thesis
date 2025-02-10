@@ -16,3 +16,6 @@ data/raw_data/United Nations/WPP*
 data/raw_data/World Bank/pop*
 data/raw_data/WHO/SARS*
 
+data/preprocessed_data/trade*
+data/preprocessed_data/regressors*
+
