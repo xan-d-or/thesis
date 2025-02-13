@@ -1,0 +1,72 @@
+---
+title: "Считаю фиксированные эффекты"
+output: html_notebook
+---
+
+```{r}
+source('fixed_effects_computation.R')
+```
+
+Оцениваю фиксированные эффекты для нескольких спецификаций модели:
+
+* hs0 или hs2 (hs4 и hs6 слишком тяжёлые) (указываю имя файла)
+* log(v) или log(v/v19) (plain_or_change)
+* v или q (value_or_quantity)
+
+```{r}
+ComputeFE("../preprocessed_data/trade_hs0.parquet.gzip", 
+                 is_category_aggregated = F, 
+                 value_or_quantity = "value",
+                 plain_or_change = 'plain',
+                 save_path = "../preprocessed_data/trade_hs0")
+```
+```{r}
+ComputeFE("../preprocessed_data/trade_hs0.parquet.gzip", 
+                 is_category_aggregated = F, 
+                 value_or_quantity = "quantity",
+                 plain_or_change = 'plain',
+                 save_path = "../preprocessed_data/trade_hs0")
+```
+```{r}
+ComputeFE("../preprocessed_data/trade_hs0.parquet.gzip", 
+                 is_category_aggregated = F, 
+                 value_or_quantity = "value",
+                 plain_or_change = 'change',
+                 save_path = "../preprocessed_data/trade_hs0")
+```
+```{r}
+ComputeFE("../preprocessed_data/trade_hs0.parquet.gzip", 
+                 is_category_aggregated = F, 
+                 value_or_quantity = "quantity",
+                 plain_or_change = 'change',
+                 save_path = "../preprocessed_data/trade_hs0")
+```
+```{r}
+ComputeFE("../preprocessed_data/trade_hs2.parquet.gzip", 
+                 is_category_aggregated = T, 
+                 value_or_quantity = "value",
+                 plain_or_change = 'plain',
+                 save_path = "../preprocessed_data/trade_hs2",
+                 fixef.tol = 1e-5)
+```
+```{r}
+ComputeFE("../preprocessed_data/trade_hs2.parquet.gzip", 
+                 is_category_aggregated = T, 
+                 value_or_quantity = "quantity",
+                 plain_or_change = 'plain',
+                 save_path = "../preprocessed_data/trade_hs2")
+```
+```{r}
+ComputeFE("../preprocessed_data/trade_hs2.parquet.gzip", 
+                 is_category_aggregated = T, 
+                 value_or_quantity = "value",
+                 plain_or_change = 'change',
+                 save_path = "../preprocessed_data/trade_hs2")
+```
+```{r}
+ComputeFE("../preprocessed_data/trade_hs2.parquet.gzip", 
+                 is_category_aggregated = T, 
+                 value_or_quantity = "quantity",
+                 plain_or_change = 'change',
+                 save_path = "../preprocessed_data/trade_hs2")
+```
