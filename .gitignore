@@ -19,3 +19,4 @@ data/raw_data/WHO/SARS*
 data/preprocessed_data/trade*
 data/preprocessed_data/regressors*
 
+.Rhistory

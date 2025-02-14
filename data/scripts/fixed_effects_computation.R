@@ -32,8 +32,11 @@ ComputeFE = function(data_directory,
                       is_category_aggregated, 
                       value_or_quantity = 'value', 
                       plain_or_change = 'plain',
-                     save_path,
-                     fixef.tol = 1e-5){
+                      save_path,
+                      fixef.tol = 1e-5,
+                      max_iter = 10000,
+                      verbose = 1
+                     ){
   
   if(data_directory == "data/preprocessed_data/trade_hs0.parquet.gzip" & is_category_aggregated){
     stop('В файле нет категории продукта!')
@@ -65,7 +68,7 @@ ComputeFE = function(data_directory,
   if (is_category_aggregated){
     df = df %>% mutate(export_fe = paste(t, "_", i, "_", category),
                        import_fe = paste(t, "_", j, "_", category),
-                       bilateral_fe = paste(i, "_", j))
+                       bilateral_fe = paste(i, "_", j, "_", category))
   } else {
     df = df %>% mutate(export_fe = paste(t, "_", i),
                        import_fe = paste(t, "_", j),
@@ -73,7 +76,9 @@ ComputeFE = function(data_directory,
    
   }
 
-  m = feols(fml, data = df, fixef.tol = fixef.tol)
+  m = feols(fml, data = df, fixef.tol = fixef.tol,
+   fixef.iter = max_iter, verbose = verbose,
+   mem.clean = TRUE)
   print(m)
   
   fixed_effects = m %>% fixef()
