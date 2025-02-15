@@ -1,0 +1,6 @@
+polars==1.22.0
+pandas==2.2.3
+numpy==2.2
+plotly==6.0.0
+nbformat>=4.2.0
+fastexcel

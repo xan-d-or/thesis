@@ -98,11 +98,11 @@ ComputeFE = function(data_directory,
   fixed_effects = m %>% fixest::fixef(fixef.iter = max_iter, fixef.tol = fixef.tol)
   summary(fixed_effects) %>% print()
 
-  if (interact_category && (data_directory != "data/preprocessed_data/trade_hs0.parquet.gzip")){
+  if (interact_category && (data_directory != "../preprocessed_data/trade_hs0.parquet.gzip")){
     save_path = paste(save_path, '_cat_interact', sep = '')
   }
 
-  if (!interact_category && (data_directory != "data/preprocessed_data/trade_hs0.parquet.gzip")){
+  if (!interact_category && (data_directory != "../preprocessed_data/trade_hs0.parquet.gzip")){
     save_path = paste(save_path, '_cat_not_interact', sep = '')
   }
 
