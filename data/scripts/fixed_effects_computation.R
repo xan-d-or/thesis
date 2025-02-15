@@ -33,12 +33,13 @@ ComputeFE = function(data_directory,
                       value_or_quantity = 'value', 
                       plain_or_change = 'plain',
                       save_path,
+                      interact_category = TRUE,
                       fixef.tol = 1e-5,
                       max_iter = 10000,
                       verbose = 1
                      ){
   
-  if(data_directory == "data/preprocessed_data/trade_hs0.parquet.gzip" & is_category_aggregated){
+  if(data_directory == "data/preprocessed_data/trade_hs0.parquet.gzip" && is_category_aggregated){
     stop('В файле нет категории продукта!')
   }
   
@@ -63,12 +64,16 @@ ComputeFE = function(data_directory,
       y = 'log(q)'
     }
   }
-  fml = formula(paste(y, '~1| export_fe+import_fe+bilateral_fe'))
+  
   # Считаем переменные, по которым потом считаются фиксированные эффекты
   if (is_category_aggregated){
     df = df %>% mutate(export_fe = paste(t, "_", i, "_", category),
-                       import_fe = paste(t, "_", j, "_", category),
-                       bilateral_fe = paste(i, "_", j, "_", category))
+                       import_fe = paste(t, "_", j, "_", category))
+    if (interact_category){
+      df = df %>% mutate(bilateral_fe = paste(i, "_", j, "_", category))  
+    } else{
+      df = df %>% mutate(bilateral_fe = paste(i, "_", j)) 
+    }
   } else {
     df = df %>% mutate(export_fe = paste(t, "_", i),
                        import_fe = paste(t, "_", j),
@@ -76,18 +81,38 @@ ComputeFE = function(data_directory,
    
   }
 
-  m = feols(fml, data = df, fixef.tol = fixef.tol,
-   fixef.iter = max_iter, verbose = verbose,
+  if(interact_category){
+    fml = formula(paste(y, '~1 | export_fe+import_fe+bilateral_fe'))
+  } else{
+    fml = formula(paste(y, '~1 | export_fe+import_fe+bilateral_fe+category'))
+  }
+
+  m = feols(fml, data = df,
+   verbose = verbose,
+   fixef.iter = max_iter,
+   fixef.tol = fixef.tol,
+  #  fixef.rm = 'both', Убирает singleton FE, но мне по смыслу стоит их оставить
    mem.clean = TRUE)
   print(m)
-  
-  fixed_effects = m %>% fixef()
-  
-  fixed_effects$export_fe %>% DataframeFromNamedList(., is_category_aggregated) %>%
+
+  fixed_effects = m %>% fixest::fixef(fixef.iter = max_iter, fixef.tol = fixef.tol)
+  summary(fixed_effects) %>% print()
+
+  if (interact_category && (data_directory != "data/preprocessed_data/trade_hs0.parquet.gzip")){
+    save_path = paste(save_path, '_cat_interact', sep = '')
+  }
+
+  if (!interact_category && (data_directory != "data/preprocessed_data/trade_hs0.parquet.gzip")){
+    save_path = paste(save_path, '_cat_not_interact', sep = '')
+  }
+
+  fixed_effects$export_fe %>%
+    DataframeFromNamedList(., is_category_aggregated) %>%
     write_parquet(., paste(save_path, '_',  value_or_quantity, '_', plain_or_change, '_export_fe.parquet.gzip', sep = ''))
-  fixed_effects$import_fe %>% DataframeFromNamedList(., is_category_aggregated) %>%
+  fixed_effects$import_fe %>%
+    DataframeFromNamedList(., is_category_aggregated) %>%
     write_parquet(., paste(save_path, '_',  value_or_quantity, '_', plain_or_change, '_import_fe.parquet.gzip', sep = ''))
-  # return(list(model = m, fe = m %>% fixef()))
+
 }
 
 
