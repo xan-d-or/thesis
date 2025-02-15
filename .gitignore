@@ -20,3 +20,5 @@ data/preprocessed_data/trade*
 data/preprocessed_data/regressors*
 
 .Rhistory
+
+data/processed_data/trade*
