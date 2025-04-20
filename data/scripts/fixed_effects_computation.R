@@ -82,9 +82,9 @@ ComputeFE = function(data_directory,
   }
 
   if(interact_category){
-    fml = formula(paste(y, '~1 | export_fe+import_fe+bilateral_fe'))
+    fml = formula(paste(y, '~1 | t + export_fe + import_fe + bilateral_fe'))
   } else{
-    fml = formula(paste(y, '~1 | export_fe+import_fe+bilateral_fe+category'))
+    fml = formula(paste(y, '~1 | t + export_fe+import_fe+bilateral_fe+category'))
   }
 
   m = feols(fml, data = df,
